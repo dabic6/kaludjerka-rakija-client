@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="sr" style="--dark: #3e2b19; --dark2: #4a3725; --dark3: #564331;"><head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;☕&lt;/text&gt;&lt;/svg&gt;">
+<title>Destilerija Kolarević – Campaign Proposal</title>
+<!-- Campaign Proposal Template -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&amp;family=DM+Sans:wght@300;400;500&amp;family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&amp;family=Lora:ital,wght@0,400;0,600;1,400&amp;family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&amp;family=EB+Garamond:ital,wght@0,400;0,600;1,400&amp;family=Inter:wght@300;400;500&amp;family=Raleway:wght@300;400;500&amp;family=Montserrat:wght@300;400;500&amp;family=Nunito:wght@300;400;500&amp;family=Josefin+Sans:wght@300;400&amp;display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --gold: #c8973a;
+  --gold-light: #f5c97a;
+  --cream: #f0e8d8;
+  --dark: #0e0a06;
+  --dark2: #1a1208;
+  --dark3: #241a0e;
+  --text-dim: rgba(212,196,168,0.55);
+  --accent: #8b5cf6;
+  --accent-dim: rgba(139,92,246,0.3);
+}
+body { background: var(--dark); font-family: 'DM Sans', sans-serif; color: var(--cream); min-height: 100vh; }
+
+/* ── FLOATING EDIT TAB ── */
+#edit-fab {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1000;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px 0 0 8px;
+  padding: 14px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  box-shadow: -3px 0 20px rgba(139,92,246,0.4);
+  transition: background 0.2s, right 0.3s;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  user-select: none;
+}
+#edit-fab:hover { background: #7c3aed; }
+#edit-fab.panel-open { background: #7c3aed; }
+#edit-fab svg { flex-shrink: 0; }
+
+/* ── SIDE PANEL ── */
+#panel {
+  display: none;
+  position: fixed; top: 0; right: 0; width: 370px; height: 100vh;
+  background: #110f1a; border-left: 1px solid var(--accent-dim);
+  z-index: 9999; overflow-y: auto; padding: 0;
+}
+#panel.open { display: block; }
+.ps { padding: 18px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.ps-title { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+.ps-row { margin-bottom: 12px; }
+.ps-label { font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 4px; display: block; }
+.ps-input {
+  width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+  color: #fff; padding: 7px 9px; border-radius: 6px; font-size: 11px;
+  font-family: 'DM Sans', sans-serif; resize: vertical; transition: border-color 0.2s;
+}
+.ps-input:focus { outline: none; border-color: var(--accent); }
+.up-btn {
+  width: 100%; background: rgba(200,151,58,0.08); border: 1px dashed rgba(200,151,58,0.35);
+  color: var(--gold-light); padding: 9px; border-radius: 7px; font-size: 11px;
+  cursor: pointer; text-align: center; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+}
+.up-btn:hover { background: rgba(200,151,58,0.18); }
+.up-prev { width: 100%; height: 72px; object-fit: cover; border-radius: 5px; margin-top: 7px; display: none; border: 1px solid rgba(200,151,58,0.25); }
+.tab-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
+.ptab { padding: 4px 9px; border-radius: 5px; font-size: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.09); color: rgba(255,255,255,0.45); background: transparent; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+.ptab.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+.pep { display: none; }
+.pep.on { display: block; }
+
+/* ── MAIN ── */
+#main { padding-top: 0; transition: margin-right 0.3s; }
+/* panel overlays content, no shift needed */
+
+/* ── HEADER ── */
+.hdr {
+  text-align: center; padding: 64px 40px 52px;
+  border-bottom: 1px solid rgba(200,151,58,0.18);
+  background: linear-gradient(180deg, rgba(200,151,58,0.07) 0%, transparent 100%);
+}
+.hdr-logo { width: 82px; height: 82px; border-radius: 50%; overflow: hidden; margin: 0 auto 18px; border: 2px solid var(--gold); box-shadow: 0 0 32px rgba(200,151,58,0.28); transition: box-shadow 0.2s, border-color 0.2s; }
+.hdr-logo:hover { border-color: var(--gold-light); box-shadow: 0 0 40px rgba(200,151,58,0.5); }
+.hdr-logo img { width: 100%; height: 100%; object-fit: cover; }
+.hdr-kicker { font-size: 9px; letter-spacing: 5px; text-transform: uppercase; color: var(--gold); margin-bottom: 13px; }
+.hdr h1 { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 700; color: #fff; line-height: 1.15; margin-bottom: 9px; }
+.hdr h1 em { font-style: italic; color: var(--gold-light); }
+.hdr-sub { font-size: 12px; color: var(--text-dim); }
+
+/* ── SECTION ── */
+.sec { padding: 52px 40px; max-width: 920px; margin: 0 auto; }
+.sec-kicker { font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 7px; }
+.sec-title { font-family: 'Playfair Display', serif; font-size: 27px; color: #fff; margin-bottom: 7px; }
+.sec-title em { font-style: italic; color: var(--gold-light); }
+.sec-desc { font-size: 12px; color: var(--text-dim); font-weight: 300; line-height: 1.7; max-width: 540px; margin-bottom: 34px; }
+
+/* ── SIDE BY SIDE ── */
+.side-by-side {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;
+}
+.sbs-label {
+  text-align: center; font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 12px;
+}
+.sbs-label span { color: var(--gold); }
+
+/* ── PHONE ── */
+.phone-wrap { display: flex; flex-direction: column; align-items: center; }
+.phone {
+  width: 260px; background: #000; border-radius: 36px; padding: 12px 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.07), 0 28px 70px rgba(0,0,0,0.8), 0 0 50px rgba(200,151,58,0.06);
+}
+.phone-notch { width: 80px; height: 20px; background: #000; border-radius: 0 0 12px 12px; margin: 0 auto 7px; }
+.phone-screen { background: #fff; border-radius: 24px; overflow: hidden; }
+
+/* Instagram UI */
+.ig-topbar { background: #fff; padding: 8px 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #f0f0f0; }
+.ig-back { font-size: 14px; color: #111; }
+.ig-handle { font-size: 10px; font-weight: 700; color: #111; font-family: -apple-system,sans-serif; }
+.ig-more { margin-left: auto; font-size: 14px; color: #111; }
+
+.ig-profile-section { background: #fff; padding: 10px 12px 8px; }
+.ig-top-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.ig-pic-wrap {
+  width: 58px; height: 58px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+  padding: 2px;
+}
+.ig-pic-wrap img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+.ig-nums { display: flex; gap: 12px; flex: 1; justify-content: center; }
+.ig-num { text-align: center; font-family: -apple-system,sans-serif; }
+.ig-num-val { font-size: 13px; font-weight: 700; color: #111; display: block; }
+.ig-num-label { font-size: 8px; color: #777; }
+.ig-bio { font-family: -apple-system,sans-serif; }
+.ig-bio-name { font-size: 10px; font-weight: 700; color: #111; margin-bottom: 1px; }
+.ig-bio-cat { font-size: 9px; color: #666; margin-bottom: 2px; }
+.ig-bio-italic { font-size: 9px; font-style: italic; font-weight: 600; color: #111; line-height: 1.4; margin-bottom: 2px; }
+.ig-bio-line { font-size: 9px; color: #333; line-height: 1.4; }
+.ig-bio-link { font-size: 9px; color: #1a73e8; }
+
+.ig-action-row { display: flex; gap: 4px; padding: 6px 10px 8px; background: #fff; }
+.ig-btn-follow { flex: 1; background: #0095f6; color: #fff; border: none; border-radius: 6px; padding: 5px; font-size: 9px; font-weight: 700; font-family: -apple-system,sans-serif; }
+.ig-btn-msg { flex: 1; background: #fff; color: #111; border: 1px solid #dbdbdb; border-radius: 6px; padding: 5px; font-size: 9px; font-weight: 600; font-family: -apple-system,sans-serif; }
+.ig-btn-contact { flex: 1; background: #fff; color: #111; border: 1px solid #dbdbdb; border-radius: 6px; padding: 5px; font-size: 9px; font-weight: 600; font-family: -apple-system,sans-serif; }
+.ig-btn-add { background: #fff; color: #111; border: 1px solid #dbdbdb; border-radius: 6px; padding: 5px 7px; font-size: 10px; font-family: -apple-system,sans-serif; }
+
+.ig-highlights { display: flex; gap: 10px; padding: 8px 10px 6px; background: #fff; border-bottom: 1px solid #f0f0f0; overflow-x: auto; }
+.ig-hl { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.ig-hl-ring { width: 38px; height: 38px; border-radius: 50%; background: #e0e0e0; overflow: hidden; border: 2px solid #e0e0e0; }
+.ig-hl-ring img { width: 100%; height: 100%; object-fit: cover; }
+.ig-hl-label { font-size: 7px; color: #111; font-family: -apple-system,sans-serif; text-align: center; }
+
+.ig-tabs { display: flex; background: #fff; border-bottom: 1px solid #f0f0f0; }
+.ig-tab { flex: 1; padding: 7px; text-align: center; font-size: 14px; }
+.ig-tab.active { border-bottom: 1px solid #111; }
+
+/* NEW improved grid */
+.ig-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5px; background: #f0f0f0; }
+.ig-cell { aspect-ratio: 1; position: relative; overflow: hidden; }
+.ig-cell img, .ig-cell video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ig-cell video { position: relative; }
+
+/* Post overlays */
+.ov-dark { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,0.65) 100%); }
+.ov-text { position: absolute; bottom: 5px; left: 5px; right: 5px; }
+.ov-tag { font-size: 5.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-light); opacity: 0.9; }
+.ov-quote { font-family: 'Playfair Display', serif; font-size: 6px; font-style: italic; color: #fff; line-height: 1.3; }
+.quote-cell { background: linear-gradient(135deg,#1a0f05,#2d1a08,#1a0f05); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; text-align: center; }
+.qc-logo { width: 18px; height: 18px; border-radius: 50%; overflow: hidden; margin-bottom: 4px; }
+.qc-logo img { width: 100%; height: 100%; object-fit: cover; }
+.qc-text { font-family: 'Playfair Display', serif; font-size: 6px; font-style: italic; color: var(--gold-light); line-height: 1.4; margin-bottom: 3px; }
+.qc-line { width: 14px; height: 0.5px; background: var(--gold); opacity: 0.6; }
+
+/* ── POST CARDS ── */
+.cards-sec { padding: 52px 40px; max-width: 920px; margin: 0 auto; border-top: 1px solid rgba(200,151,58,0.12); }
+.cards-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; }
+.card { background: var(--dark3); border-radius: 11px; overflow: hidden; border: 1px solid rgba(200,151,58,0.1); transition: transform 0.3s, box-shadow 0.3s; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,0.5); }
+.card-img { width: 100%; aspect-ratio: 1; overflow: hidden; position: relative; }
+.card-img img { width: 100%; height: 100%; object-fit: cover; display: block;}
+.card-img video { width: 100%; display: block; object-fit: contain; background: #000; }
+.card-body { padding: 16px 18px 18px; }
+.card-kicker { font-size: 8.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 7px; }
+.card-title { font-family: 'Playfair Display', serif; font-size: 15px; color: #fff; margin-bottom: 7px; line-height: 1.3; }
+.card-text { font-size: 11.5px; color: var(--text-dim); line-height: 1.65; font-weight: 300; margin-bottom: 10px; }
+.card-tags { font-size: 9.5px; color: rgba(200,151,58,0.48); line-height: 1.6; }
+
+/* card post overlays large */
+.card-quote { background: linear-gradient(135deg,#1a0f05,#2d1a08,#1a0f05); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; height: 100%; }
+.cq-logo { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; margin-bottom: 10px; }
+.cq-logo img { width: 100%; height: 100%; object-fit: cover; }
+.cq-text { font-family: 'Playfair Display', serif; font-size: 16px; font-style: italic; color: var(--gold-light); line-height: 1.4; margin-bottom: 8px; }
+.cq-line { width: 28px; height: 1px; background: var(--gold); opacity: 0.5; }
+/* outer border frame */
+/* inner glow */
+/* corner ornaments via box-shadow trick on a pseudo sibling — done via cp-corners */
+.card-morning-ov { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.7) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 14px; }
+.cm-text { font-family: 'Playfair Display', serif; font-size: 15px; font-style: italic; color: rgba(255,255,255,0.92); line-height: 1.3; }
+.cm-tag { font-size: 9px; color: var(--gold-light); letter-spacing: 1px; margin-top: 4px; }
+.card-coffee-ov { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(0,0,0,0) 50%,rgba(0,0,0,0.65) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 14px; }
+
+/* ── STRATEGY ── */
+.strat-sec { padding: 52px 40px; max-width: 920px; margin: 0 auto; border-top: 1px solid rgba(200,151,58,0.12); }
+.pillars { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 6px; }
+.pillar { background: var(--dark3); border: 1px solid rgba(200,151,58,0.1); border-radius: 10px; padding: 20px 18px; }
+.pillar-icon { display: block; margin-bottom: 12px; line-height: 0; }
+.pillar-title { font-family: 'Playfair Display', serif; font-size: 14px; color: #fff; margin-bottom: 7px; }
+.pillar-text { font-size: 11px; color: var(--text-dim); line-height: 1.6; font-weight: 300; }
+
+/* ── FOOTER ── */
+.ftr { text-align: center; padding: 48px 40px; border-top: 1px solid rgba(200,151,58,0.12); background: linear-gradient(0deg,rgba(200,151,58,0.04) 0%,transparent 100%); }
+.ftr-logo { width: 50px; height: 50px; border-radius: 50%; overflow: hidden; margin: 0 auto 14px; opacity: 0.65; }
+.ftr-logo img { width: 100%; height: 100%; object-fit: cover; }
+.ftr-name { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--gold-light); font-style: italic; margin-bottom: 5px; }
+.ftr-sub { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
+
+/* ── EDIT HIGHLIGHTS ── */
+[contenteditable]:hover { outline: 1px dashed rgba(139,92,246,0.4); border-radius: 2px; cursor: text; }
+[contenteditable]:focus { outline: 2px solid var(--accent); border-radius: 2px; background: rgba(139,92,246,0.05); }
+.edit-pill { position: fixed; bottom: 18px; left: 18px; background: rgba(139,92,246,0.88); color: #fff; font-size: 10px; padding: 5px 13px; border-radius: 20px; display: none; z-index: 1001; font-family: 'DM Sans', sans-serif; }
+.edit-pill.show { display: block; }
+
+/* ── BEFORE/AFTER LABELS ── */
+.ba-label {
+  display: inline-block; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 20px; margin-bottom: 10px;
+}
+.ba-before { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+.ba-after { background: rgba(200,151,58,0.15); color: var(--gold); border: 1px solid rgba(200,151,58,0.3); }
+
+/* ── ENHANCED EDITOR CONTROLS ── */
+.ctrl-section { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.ctrl-title { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
+.ctrl-title::after { content:''; flex:1; height:1px; background: rgba(139,92,246,0.2); }
+
+.ctrl-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; }
+.ctrl-label { font-size: 10px; color: rgba(255,255,255,0.45); white-space: nowrap; min-width: 90px; }
+.ctrl-val { font-size: 10px; color: var(--gold-light); min-width: 32px; text-align: right; font-family: monospace; }
+
+input[type=range].ctrl-slider {
+  -webkit-appearance: none; appearance: none;
+  flex: 1; height: 3px; background: rgba(255,255,255,0.1);
+  border-radius: 2px; outline: none; cursor: pointer;
+}
+input[type=range].ctrl-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 13px; height: 13px;
+  border-radius: 50%; background: var(--gold); cursor: pointer;
+  box-shadow: 0 0 6px rgba(200,151,58,0.5);
+}
+input[type=range].ctrl-slider::-webkit-slider-runnable-track {
+  background: linear-gradient(90deg, var(--gold) var(--pct,0%), rgba(255,255,255,0.1) var(--pct,0%));
+  border-radius: 2px;
+}
+
+input[type=color].ctrl-color {
+  width: 32px; height: 26px; border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 5px; cursor: pointer; padding: 2px; background: transparent;
+}
+
+.ctrl-select {
+  flex:1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+  color: #fff; padding: 5px 7px; border-radius: 5px; font-size: 10px;
+  font-family: 'DM Sans', sans-serif; cursor: pointer; outline: none;
+}
+.ctrl-select option { background: #1a1208; }
+
+.ctrl-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+.ctrl-pill {
+  padding: 3px 9px; border-radius: 4px; font-size: 9px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4);
+  background: transparent; font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+}
+.ctrl-pill:hover { border-color: var(--gold); color: var(--gold); }
+.ctrl-pill.on { background: rgba(200,151,58,0.2); border-color: var(--gold); color: var(--gold-light); }
+
+.post-selector { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+.psel { padding: 4px 9px; border-radius: 5px; font-size: 10px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4);
+  background: transparent; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+.psel.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.ctrl-tip { font-size: 9px; color: rgba(255,255,255,0.2); line-height: 1.5; margin-top: 4px; font-style: italic; }
+
+/* === Media embeds (video / YouTube) === */
+.card-img, .ig-cell { position: relative; overflow: hidden; }
+.card-img video, .card-img iframe,
+.ig-cell video, .ig-cell iframe,
+.phone-screen video, .phone-screen iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.card-img video, .ig-cell video, .phone-screen video { object-fit: cover; }
+.media-hidden { display:none !important; }
+
+/* Screenshot mode for BEFORE feed */
+.phone-screen.screenshot-mode { padding:0 !important; }
+.phone-screen.screenshot-mode img { width:100%; height:100%; object-fit:cover; display:block; }
+
+
+
+/* ===== Reels / Feed media framing ===== */
+.media-frame{
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.35);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+.media-frame[data-aspect="reel"]{ aspect-ratio: 9 / 16; }
+.media-frame[data-aspect="feed"]{ aspect-ratio: 1 / 1; }
+.media-frame > img,
+.media-frame > video,
+.media-frame > iframe{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.media-frame[data-fit="contain"] > img,
+.media-frame[data-fit="contain"] > video,
+.media-frame[data-fit="contain"] > iframe{
+  object-fit: contain;
+}
+.media-frame[data-fit="cover"] > img,
+.media-frame[data-fit="cover"] > video,
+.media-frame[data-fit="cover"] > iframe{
+  object-fit: cover;
+}
+/* Ensure videos show controls and allow tap-to-unmute */
+.media-frame video{ background: #000; }
+
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — tablet, mobile, small mobile
+   ═══════════════════════════════════════════════════════ */
+
+/* ── TABLET  ≤ 768px ── */
+@media (max-width: 768px) {
+
+  /* Toolbar: hide hint text, allow wrapping */
+  .tb-hint { display: none; }
+  .tb-brand { display: none; }
+  #toolbar { gap: 6px; padding: 7px 12px; }
+  .tb-btn { padding: 5px 9px; font-size: 10px; }
+
+  /* Panel: full-width slide-in on mobile */
+  #panel.open { width: 100vw; }
+  #main.shifted { margin-right: 0; }
+
+  /* Header */
+  .hdr { padding: 48px 24px 40px; }
+  .hdr h1 { font-size: 32px; }
+  .hdr-logo { width: 68px; height: 68px; }
+
+  /* Sections */
+  .sec, .cards-sec, .strat-sec { padding: 40px 24px; }
+  .sec-title { font-size: 22px; }
+
+  /* Side by side phones → stack vertically */
+  .side-by-side {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  /* Phones: scale down slightly */
+  .phone { width: 240px; }
+
+  /* Cards: 2 columns still fine on tablet */
+
+  /* Pillars: 2 columns on tablet */
+  .pillars { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── MOBILE  ≤ 540px ── */
+@media (max-width: 540px) {
+
+  /* FAB smaller on mobile */
+  #edit-fab { padding: 11px 7px; font-size: 8px; gap: 5px; }
+  #edit-fab.panel-open { background: #6d28d9; }
+
+
+
+  /* Header */
+  .hdr { padding: 36px 18px 32px; }
+  .hdr h1 { font-size: 26px; }
+  .hdr-kicker { font-size: 8px; letter-spacing: 3px; }
+  .hdr-sub { font-size: 11px; }
+  .hdr-logo { width: 58px; height: 58px; }
+
+  /* Sections */
+  .sec, .cards-sec, .strat-sec { padding: 32px 18px; }
+  .sec-title { font-size: 20px; }
+  .sec-desc { font-size: 11.5px; }
+
+  /* Side by side → single col, centered */
+  .side-by-side { gap: 32px; }
+  .phone-wrap { width: 100%; align-items: center; }
+  .phone { width: min(240px, 72vw); }
+
+  /* Cards → single column */
+  .cards-grid { grid-template-columns: 1fr; gap: 18px; }
+  .card-title { font-size: 14px; }
+  .card-text { font-size: 11px; }
+
+  /* Pillars → single column */
+  .pillars { grid-template-columns: 1fr; gap: 14px; }
+
+  /* Footer */
+  .ftr { padding: 36px 18px; }
+  .ftr-name { font-size: 16px; }
+}
+
+
+  /* Panel inputs: larger touch targets */
+  .ps-input { padding: 10px 10px; font-size: 13px; }
+  .up-btn { padding: 12px; font-size: 12px; }
+  .ptab { padding: 6px 12px; font-size: 11px; }
+
+/* ── SMALL MOBILE  ≤ 380px ── */
+@media (max-width: 380px) {
+  .hdr h1 { font-size: 22px; }
+  .phone { width: 80vw; }
+  .sec, .cards-sec, .strat-sec { padding: 28px 14px; }
+  .tb-btn { padding: 4px 7px; font-size: 9.5px; }
+}
+/* ── CLIENT SLOTS ─────────────────────────────────────────── */
+.client-slots { display:flex; flex-direction:column; gap:0; }
+.client-slot { display:flex; align-items:center; gap:6px; padding:7px 10px; border-radius:7px; cursor:pointer; transition:background 0.15s; border:1px solid transparent; margin-bottom:4px; }
+.client-slot:hover { background:rgba(255,255,255,0.04); }
+.client-slot.active { background:rgba(139,92,246,0.12); border-color:rgba(139,92,246,0.3); }
+.client-slot-name { flex:1; font-size:12px; color:#fff; font-weight:400; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.client-slot-name.empty { color:rgba(255,255,255,0.25); font-style:italic; }
+.client-slot-status { font-size:9px; padding:2px 7px; border-radius:10px; font-weight:600; letter-spacing:0.5px; flex-shrink:0; }
+.status-draft { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); }
+.status-sent { background:rgba(59,130,246,0.2); color:#93c5fd; }
+.status-approved { background:rgba(34,197,94,0.2); color:#86efac; }
+.status-rejected { background:rgba(239,68,68,0.2); color:#fca5a5; }
+.client-slot-del { background:none; border:none; color:rgba(255,255,255,0.2); cursor:pointer; font-size:14px; padding:0 2px; line-height:1; flex-shrink:0; }
+.client-slot-del:hover { color:rgba(239,68,68,0.7); }
+.slot-actions { display:flex; gap:6px; margin-top:8px; }
+.slot-btn { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:rgba(255,255,255,0.6); font-size:10px; padding:6px 4px; cursor:pointer; transition:all 0.15s; text-align:center; }
+.slot-btn:hover { background:rgba(139,92,246,0.15); border-color:var(--accent); color:#fff; }
+.slot-btn.primary { background:rgba(139,92,246,0.2); border-color:var(--accent); color:#fff; }
+.status-select { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; font-size:10px; padding:5px 8px; cursor:pointer; outline:none; width:100%; margin-top:8px; }
+
+/* ── ABOUT & PRICING SECTIONS ────────────────────────────── */
+.about-sec { padding: 52px 40px; max-width: 920px; margin: 0 auto; border-top: 1px solid rgba(200,151,58,0.12); }
+.about-grid { display:grid; grid-template-columns:1fr 2fr; gap:40px; align-items:start; margin-top:24px; }
+.about-avatar { width:90px; height:90px; border-radius:50%; overflow:hidden; border:2px solid rgba(200,151,58,0.3); background:var(--dark3); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+.about-avatar img { width:100%; height:100%; object-fit:cover; display:none; }
+.about-avatar-empty { font-size:28px; opacity:0.3; }
+.about-left { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.about-name { font-family:'Playfair Display',serif; font-size:18px; color:#fff; text-align:center; }
+.about-role { font-size:11px; color:var(--gold); letter-spacing:2px; text-transform:uppercase; text-align:center; }
+.about-body { font-size:13px; color:var(--text-dim); line-height:1.75; }
+.about-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:16px; }
+.about-tag { font-size:10px; padding:4px 10px; border-radius:20px; border:1px solid rgba(200,151,58,0.25); color:var(--gold-light); background:rgba(200,151,58,0.05); }
+
+.pricing-sec { padding: 52px 40px; max-width: 920px; margin: 0 auto; border-top: 1px solid rgba(200,151,58,0.12); }
+.pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:24px; }
+.pricing-card { background:var(--dark3); border:1px solid rgba(200,151,58,0.1); border-radius:12px; padding:24px 20px; text-align:center; transition:border-color 0.2s; }
+.pricing-card.featured { border-color:rgba(200,151,58,0.4); background:linear-gradient(160deg,rgba(200,151,58,0.07),var(--dark3)); }
+.pricing-badge { font-size:8px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:12px; display:block; min-height:14px; }
+.pricing-name { font-family:'Playfair Display',serif; font-size:16px; color:#fff; margin-bottom:6px; }
+.pricing-price { font-size:26px; font-weight:500; color:var(--gold-light); margin-bottom:4px; }
+.pricing-period { font-size:10px; color:var(--text-dim); margin-bottom:16px; }
+.pricing-divider { height:1px; background:rgba(200,151,58,0.12); margin:16px 0; }
+.pricing-features { font-size:11px; color:var(--text-dim); line-height:2; text-align:left; }
+.pricing-feature { display:flex; align-items:baseline; gap:6px; }
+.pricing-feature::before { content:'✦'; color:var(--gold); font-size:8px; flex-shrink:0; }
+.pricing-note { font-size:10px; color:var(--text-dim); text-align:center; margin-top:20px; opacity:0.6; }
+
+/* ── EXPIRY BADGE ─────────────────────────────────────────── */
+#expiry-badge { display:none; text-align:center; padding:8px 20px; background:rgba(200,151,58,0.06); border-bottom:1px solid rgba(200,151,58,0.1); font-size:11px; color:var(--text-dim); letter-spacing:0.5px; }
+#expiry-badge span { color:var(--gold); }
+
+
+@media (max-width:768px) {
+  .about-grid { grid-template-columns:1fr; }
+  .pricing-grid { grid-template-columns:1fr; gap:12px; }
+    }
+
+/* ── PROMO OVERLAY (any post) ─────────────────────────────── */
+.promo-cell { position:relative; width:100%; height:100%; background:radial-gradient(ellipse at 50% 0%, #3a2008 0%, #1a0d04 45%, #0a0603 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:6px 4px; box-sizing:border-box; }
+.promo-cell::before { content:''; position:absolute; inset:0; border:1px solid rgba(200,151,58,0.35); pointer-events:none; }
+.pc-badge { font-size:5.5px; letter-spacing:2.5px; text-transform:uppercase; color:var(--gold); margin-bottom:3px; opacity:0.9; }
+.pc-stars { color:var(--gold); letter-spacing:2px; margin-bottom:3px; opacity:0.6; font-size:6px; }
+.pc-day { font-family:'Playfair Display',serif; font-size:13px; color:#fff; line-height:1.1; text-align:center; }
+.pc-day em { color:var(--gold-light); font-style:italic; }
+.pc-divider { width:28px; height:1px; background:var(--gold); margin:4px auto; opacity:0.5; }
+.pc-offer { font-size:6px; color:var(--cream); text-align:center; opacity:0.85; }
+.pc-offer strong { color:var(--gold-light); font-size:7px; display:block; }
+.pc-time { font-size:7px; color:var(--gold); letter-spacing:1px; margin-top:3px; }
+
+.card-promo { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, #3a2008 0%, #1a0d04 45%, #0a0603 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px 12px; box-sizing:border-box; }
+.card-promo::before { content:''; position:absolute; inset:6px; border:1px solid rgba(200,151,58,0.25); pointer-events:none; }
+.card-promo::after { content:''; position:absolute; inset:10px; border:1px solid rgba(200,151,58,0.1); pointer-events:none; }
+.cp-corner { position:absolute; width:10px; height:10px; border-color:var(--gold); border-style:solid; opacity:0.6; }
+.cp-corner.tl { top:3px; left:3px; border-width:1px 0 0 1px; }
+.cp-corner.tr { top:3px; right:3px; border-width:1px 1px 0 0; }
+.cp-corner.bl { bottom:3px; left:3px; border-width:0 0 1px 1px; }
+.cp-corner.br { bottom:3px; right:3px; border-width:0 1px 1px 0; }
+.cp-badge { font-size:8px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:6px; opacity:0.9; }
+.cp-stars { color:var(--gold); letter-spacing:3px; margin-bottom:8px; opacity:0.6; font-size:10px; }
+.cp-day { font-family:'Playfair Display',serif; font-size:28px; color:#fff; line-height:1.1; text-align:center; }
+.cp-day em { color:var(--gold-light); font-style:italic; }
+.cp-divider { width:50px; height:1px; background:var(--gold); margin:10px auto; opacity:0.45; }
+.cp-offer { font-size:11px; color:var(--cream); text-align:center; opacity:0.85; }
+.cp-offer strong { color:var(--gold-light); font-size:13px; display:block; margin-bottom:2px; }
+.cp-time { font-size:12px; color:var(--gold); letter-spacing:2px; margin-top:8px; }
+
+
+/* client view */
+#toolbar,#panel,#edit-pill,#git-modal,#edit-fab{display:none!important;}
+#main{padding-top:0!important;margin-right:0!important;}
+[contenteditable]{outline:none!important;background:none!important;}
+</style>
+<style>.no-border::before { display:none !important; }</style><link href="chrome-extension://alhgpfoeiimagjlnfekdhkjlkiomcapa/js/css/inject.css" rel="stylesheet" type="text/css" data-apio="true"><link data-apio="true" rel="stylesheet" type="text/css" href="chrome-extension://alhgpfoeiimagjlnfekdhkjlkiomcapa/js/css/a_chrome-extension_inject_global_module_scss.css"><link data-apio="true" rel="stylesheet" type="text/css" href="chrome-extension://alhgpfoeiimagjlnfekdhkjlkiomcapa/js/css/a_chrome-extension_inject_core_components_OpenPopupButton_tsx.css"></head>
+<body data-new-gr-c-s-check-loaded="14.1277.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1277.0" style="font-family: Inter, sans-serif;">
+
+<!-- FLOATING EDIT TAB (right side, no top bar) -->
+<div class="zp-open-popup-button"><div class="x_R61yl zp-13-0-5-zp-fixed"><img alt="Apollo.io" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDQwIDQwIj48cGF0aCBmaWxsPSIjZWJmMjEyIiBkPSJtMjEuNDY2IDUuMDcxLjAwNCAxMC45MTVjLjAwMSAxLjcyNS0xLjgzNCAyLjgzLTMuMzU4IDIuMDI0TDcuMTcgMTIuMjIzYTE1LjEgMTUuMSAwIDAgMSAzLjEtMy42NGw4LjU4MiA3LjkzMmMuNDU1LjQyIDEuMTcyLS4wMzYuOTg1LS42MjZMMTYuNTA5IDUuNDFhMTUgMTUgMCAwIDEgNC45NTYtLjMzOE0xOC40OTYgMzQuOTI1bC0uMDA1LTEwLjg2YzAtMS43MjQgMS44MzQtMi44MyAzLjM1OS0yLjAyM2wxMC45NDYgNS43OWExNSAxNSAwIDAgMS0zLjExNiAzLjYyNmwtOC41Ny03LjkyMWMtLjQ1NS0uNDItMS4xNzIuMDM1LS45ODUuNjI1bDMuMzE2IDEwLjQ0MWExNSAxNSAwIDAgMS00Ljk0NS4zMjJNMjMuNDkyIDE4Ljg5OCAzMS40NCAxMC4zYTE1IDE1IDAgMCAwLTMuNjQtMy4xMTNsLTUuODA0IDEwLjk3MmMtLjgwNiAxLjUyNC4zIDMuMzU5IDIuMDI0IDMuMzU4bDEwLjkwNS0uMDA1YTE1LjIgMTUuMiAwIDAgMC0uMzI0LTQuOTU4bC0xMC40ODQgMy4zM2MtLjU5LjE4Ny0xLjA0NS0uNTMtLjYyNS0uOTg1TTUuMDcgMTguNTRsMTAuODcyLS4wMDRjMS43MjUgMCAyLjgzIDEuODM0IDIuMDI0IDMuMzU4TDEyLjE5MiAzMi44MWExNSAxNSAwIDAgMS0zLjYyNy0zLjEwM2w3LjkwNi04LjU1M2MuNDItLjQ1NS0uMDM2LTEuMTcyLS42MjYtLjk4NUw1LjQwOCAyMy40ODRhMTUgMTUgMCAwIDEtLjMzNy00Ljk0MyIvPjwvc3ZnPg==" class="x_kJtSQ"></div></div><div id="edit-fab" onclick="togglePanel()" title="Open editor panel" class="panel-open">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+  <span>Edit</span>
+</div>
+<input type="file" id="import-cfg-inp" accept=".json" style="display:none" onchange="importConfig(this)">
+
+<!-- SIDE PANEL -->
+
+
+<!-- MAIN -->
+<div id="main" style="padding-top: 0px; margin-right: 0px;">
+
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-logo" id="hdr-logo-wrap" onclick="document.getElementById('ul-logo').click()" title="Click to upload logo" style="cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;background:#1a1208;">
+  <img id="logo-hdr" src="uploads/img_9434-modified_20260315_161856.webp" alt="Logo" style="width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%;" data-upload-path="uploads/img_9434-modified_20260315_161856.webp">
+  <div id="logo-hdr-empty" style="display: none; flex-direction: column; align-items: center; justify-content: center; gap: 4px; pointer-events: none;">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(200,151,58,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+    <span style="font-size:7px;color:rgba(200,151,58,0.5);letter-spacing:1px;font-family:'DM Sans',sans-serif;">LOGO</span>
+  </div>
+</div>
+    <div class="hdr-kicker" id="hdr-kicker">Ponuda za kampanju</div>
+    <h1 style="font-family: &quot;Cormorant Garamond&quot;, serif;"><span id="hdr-title-main"></span> <em id="hdr-title-em">Kaluđerka Rakija</em></h1>
+    <div class="hdr-sub" id="hdr-sub">Strategija i prilagođen izgled profila</div>
+  </div>
+
+  <!-- BEFORE / AFTER SIDE BY SIDE -->
+  <div class="sec">
+    <div class="sec-kicker" id="sec1-kicker">Pre i posle</div>
+    <div class="sec-title" id="sec1-title" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Kako izgleda <em>uređen profil</em></div>
+    <div class="sec-desc" id="sec1-desc">Levo je trenutni profil. Desno je predlog — iste fotografije, složene tako da feed deluje kao celina.</div>
+
+    <div class="side-by-side">
+
+      <!-- BEFORE -->
+      <div class="phone-wrap">
+        <div class="sbs-label"><span style="color:rgba(255,255,255,0.35)">● TRENUTNI FEED</span></div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <!-- Screenshot fills the phone edge-to-edge, no mock UI -->
+          <div class="phone-screen" id="before-screen" style="padding: 0px; background: rgb(17, 17, 17); min-height: 200px; display: flex; align-items: center; justify-content: center; cursor: default;" onclick="document.getElementById('ul-beforeShot').click()">
+            <img id="before-screenshot-img" src="uploads/before_screenshot.png" alt="" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; border-radius: 24px;" data-upload-path="uploads/before_screenshot.png">
+            <div id="before-empty-state" style="text-align: center; padding: 24px 16px; pointer-events: none; display: none;">
+              <div style="font-size:28px;margin-bottom:10px;opacity:0.3;">📱</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.3);line-height:1.5;">Click to upload<br>client's current feed<br>screenshot</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER (improved) -->
+      <div class="phone-wrap">
+        <div class="sbs-label"><span style="color:var(--gold)">✦ NOVI FEED</span></div>
+        <div class="phone" style="box-shadow: 0 0 0 1px rgba(200,151,58,0.25), 0 28px 70px rgba(0,0,0,0.8), 0 0 50px rgba(200,151,58,0.15);">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="ig-topbar">
+              <span class="ig-back">‹</span>
+              <span class="ig-handle" style="margin-left:4px;">kaludjerka_rakija</span>
+              <span class="ig-more">···</span>
+            </div>
+            <div class="ig-profile-section">
+              <div class="ig-top-row">
+                <div class="ig-pic-wrap"><img src="uploads/img_9434-modified_20260315_161856.webp" alt="" data-upload-path="uploads/img_9434-modified_20260315_161856.webp"></div>
+                <div class="ig-nums">
+                  <div class="ig-num"><span class="ig-num-val" id="after-posts">225</span><span class="ig-num-label">objave</span></div>
+                  <div class="ig-num"><span class="ig-num-val" id="after-followers">4259</span><span class="ig-num-label">pratioci</span></div>
+                  <div class="ig-num"><span class="ig-num-val" id="after-following">3313</span><span class="ig-num-label">praćeni</span></div>
+                </div>
+              </div>
+              <div class="ig-bio">
+                <div class="ig-bio-name" id="bio-name">Destilerija Kolarević</div>
+                <div class="ig-bio-cat" id="bio-cat"></div>
+                <div class="ig-bio-italic" id="bio-text"></div>
+                <div class="ig-bio-line" id="bio-addr"></div>
+                <div class="ig-bio-line" id="bio-hours"></div>
+                <div class="ig-bio-link" id="bio-link"></div>
+              </div>
+            </div>
+            <div class="ig-action-row">
+              <button class="ig-btn-follow" fdprocessedid="2nynr">Prati</button>
+              <button class="ig-btn-msg" fdprocessedid="ux4za">Poruka</button>
+              <button class="ig-btn-contact" fdprocessedid="332u5g">Kontakt</button>
+              <button class="ig-btn-add" fdprocessedid="vxq2dq">+</button>
+            </div>
+            <div class="ig-highlights">
+              <div class="ig-hl"><div class="ig-hl-ring"><img src="uploads/img_9434-modified_20260315_161856.webp" alt="" data-upload-path="uploads/img_9434-modified_20260315_161856.webp"></div><div class="ig-hl-label">☕</div></div>
+              <div class="ig-hl"><div class="ig-hl-ring" style="background:#333;"></div><div class="ig-hl-label">istaknuto</div></div>
+            </div>
+            <div class="ig-tabs">
+              <div class="ig-tab active">⊞</div>
+              <div class="ig-tab">▶</div>
+              <div class="ig-tab">↻</div>
+              <div class="ig-tab">◎</div>
+            </div>
+            <!-- NEW improved grid -->
+            <div class="ig-grid">
+              <!-- P1 coffee beans -->
+              <div class="ig-cell" style="aspect-ratio: 1 / 1; background: rgb(0, 0, 0);"><video id="grid-img-1" src="uploads/video_kaludjerka-1.mp4" data-upload-path="uploads/video_kaludjerka-1.mp4" loop="" playsinline="" style="position: absolute; inset: 0px; width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(93%) saturate(111%) contrast(107%) sepia(0%);" webkit-playsinline="" controls="" preload="auto"><source src="uploads/video_kaludjerka-1.mp4" type="video/mp4"></video>
+                
+                <div class="ov-dark"></div>
+                <div class="ov-text"><div class="ov-tag" id="p1-label-g">Kolarević rakija</div></div>
+              
+                <div class="promo-cell" id="grid-promo-1" style="position:absolute;inset:0;display:none;">
+                  <div class="pc-badge" id="p1-badge-g"></div>
+                  <div class="pc-stars">✦ ✦ ✦</div>
+                  <div class="pc-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p1-day-g"></em></div>
+                  <div class="pc-divider"></div>
+                  <div class="pc-offer"><strong id="p1-offer-g"></strong></div>
+                  <div class="pc-time" id="p1-time-g"></div>
+                </div>
+              <div class="reel-indicator" style="position: absolute; top: 6px; right: 6px; z-index: 10; opacity: 0.9; pointer-events: none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M21 3H3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 14-5-3 5-3v6z"></path></svg></div></div>
+              <!-- P2 quote -->
+              <div class="ig-cell">
+                <img id="grid-img-2" src="uploads/isto-a_zanatske_destilacije_version_1_sq_20260315_163115.webp" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;" data-upload-path="uploads/isto-a_zanatske_destilacije_version_1_sq_20260315_163115.webp">
+              
+                <div class="promo-cell" id="grid-promo-2" style="position: absolute; inset: 0px; display: none;">
+                  <div class="pc-badge" id="p2-badge-g"></div>
+                  <div class="pc-stars">✦ ✦ ✦</div>
+                  <div class="pc-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p2-day-g"></em></div>
+                  <div class="pc-divider"></div>
+                  <div class="pc-offer"><strong id="p2-offer-g"></strong></div>
+                  <div class="pc-time" id="p2-time-g"></div>
+                </div>
+              </div>
+              <div class="ig-cell">
+                <img id="grid-img-3" src="uploads/pomelli-image-22_20260315_162343.webp" alt="" style="width:100%;height:100%;object-fit:cover;" data-upload-path="uploads/pomelli-image-22_20260315_162343.webp">
+                <div class="ov-dark" id="grid-std-ov-3"></div>
+                <div class="ov-text" id="grid-std-txt-3"><div class="ov-tag" id="p3-label-g">Dobrodošlica</div></div>
+                <div class="promo-cell" id="grid-promo-3" style="position:absolute;inset:0;display:none;">
+                  <div class="pc-badge" id="p3-badge-g"></div>
+                  <div class="pc-stars">✦ ✦ ✦</div>
+                  <div class="pc-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p3-day-g"></em></div>
+                  <div class="pc-divider"></div>
+                  <div class="pc-offer"><strong id="p3-offer-g"></strong></div>
+                  <div class="pc-time" id="p3-time-g"></div>
+                </div>
+              </div>
+              <!-- P4 latte -->
+              <div class="ig-cell">
+                <img id="grid-img-4" src="uploads/pomelli-image-19_20260315_163101.webp" alt="" style="filter: brightness(93%) saturate(111%) contrast(107%) sepia(0%);" data-upload-path="uploads/pomelli-image-19_20260315_163101.webp">
+                <div class="ov-dark"></div>
+                <div class="ov-text"><div class="ov-quote" id="p4-quote-g" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Voćni karakter</div></div>
+              
+                <div class="promo-cell" id="grid-promo-4" style="position:absolute;inset:0;display:none;">
+                  <div class="pc-badge" id="p4-badge-g"></div>
+                  <div class="pc-stars">✦ ✦ ✦</div>
+                  <div class="pc-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p4-day-g"></em></div>
+                  <div class="pc-divider"></div>
+                  <div class="pc-offer"><strong id="p4-offer-g"></strong></div>
+                  <div class="pc-time" id="p4-time-g"></div>
+                </div>
+              </div>
+              <!-- P5 coffee -->
+              <div class="ig-cell">
+                <img id="grid-img-5" src="uploads/pomelli-image-24_20260315_163152.webp" alt="" style="object-position: center 60%; filter: brightness(93%) saturate(111%) contrast(107%) sepia(0%);" data-upload-path="uploads/pomelli-image-24_20260315_163152.webp">
+                <div class="ov-dark"></div>
+                <div class="ov-text"><div class="ov-tag" id="p5-label-g"></div></div>
+              
+                <div class="promo-cell" id="grid-promo-5" style="position:absolute;inset:0;display:none;">
+                  <div class="pc-badge" id="p5-badge-g"></div>
+                  <div class="pc-stars">✦ ✦ ✦</div>
+                  <div class="pc-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p5-day-g"></em></div>
+                  <div class="pc-divider"></div>
+                  <div class="pc-offer"><strong id="p5-offer-g"></strong></div>
+                  <div class="pc-time" id="p5-time-g"></div>
+                </div>
+              </div>
+              <!-- P6 quote -->
+              <div class="ig-cell">
+                <img id="grid-img-6" src="uploads/odabir_plemenitog_vo-a_version_1_square_20260315_163040.webp" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;" data-upload-path="uploads/odabir_plemenitog_vo-a_version_1_square_20260315_163040.webp">
+              
+                <div class="promo-cell" id="grid-promo-6" style="position:absolute;inset:0;display:none;">
+                  <div class="pc-badge" id="p6-badge-g"></div>
+                  <div class="pc-stars">✦ ✦ ✦</div>
+                  <div class="pc-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p6-day-g"></em></div>
+                  <div class="pc-divider"></div>
+                  <div class="pc-offer"><strong id="p6-offer-g"></strong></div>
+                  <div class="pc-time" id="p6-time-g"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- POST CARDS -->
+  <div class="cards-sec">
+    <div class="sec-kicker" id="sec2-kicker">Predlog objava</div>
+    <div class="sec-title" id="sec2-title" style="font-family: &quot;Cormorant Garamond&quot;, serif;">6 <em>objava</em> za početak</div>
+    <div class="sec-desc" id="sec2-desc" style="margin-bottom:28px;">Ovo je predlog za prvih 6 postova. Svaki ima drugačiji cilj — neki prodaju, neki grade atmosferu, neki pozivaju ljude.</div>
+    <div class="cards-grid">
+
+      <!-- Card 1 -->
+      <div class="card">
+        <div class="card-img" style="position: relative; aspect-ratio: 9 / 16; background: rgb(0, 0, 0);"><video id="card-img-1" src="uploads/video_kaludjerka-1.mp4" data-upload-path="uploads/video_kaludjerka-1.mp4" loop="" playsinline="" style="width: 100%; display: block; object-fit: contain; background: rgb(0, 0, 0); filter: brightness(93%) saturate(111%) contrast(107%) sepia(0%);" webkit-playsinline="" controls="" preload="auto"><source src="uploads/video_kaludjerka-1.mp4" type="video/mp4"></video>
+          
+          <div class="card-coffee-ov"><div class="cc-label" id="p1-label-c">Kolarević rakija</div></div>
+        
+          <div class="card-promo" id="card-promo-1" style="display:none;">
+            <div class="cp-corner tl"></div><div class="cp-corner tr"></div>
+            <div class="cp-corner bl"></div><div class="cp-corner br"></div>
+            <div class="cp-badge" id="p1-badge-c"></div>
+            <div class="cp-stars">✦ ✦ ✦</div>
+            <div class="cp-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p1-day-c"></em></div>
+            <div class="cp-divider"></div>
+            <div class="cp-offer"><strong id="p1-offer-c"></strong></div>
+            <div class="cp-time" id="p1-time-c"></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-kicker" id="p1-kicker">Objava 1</div>
+          <div class="card-title" id="p1-title" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Tradicija u svakoj kapi</div>
+          <div class="card-text" id="p1-cap">Zanatska rakija iz srca Srbije. Prirodno, pošteno, Kolarević.</div>
+          <div class="card-tags" id="p1-tags">#rakija #kolarević #srbija #zanatskodestilacija #premiumrakija</div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card">
+        <div class="card-img" style="position:relative;">
+          <img id="card-img-2" src="uploads/isto-a_zanatske_destilacije_version_1_sq_20260315_163115.webp" alt="" data-upload-path="uploads/isto-a_zanatske_destilacije_version_1_sq_20260315_163115.webp" style="display: block;">
+        
+          <div class="card-promo" id="card-promo-2" style="display: none;">
+            <div class="cp-corner tl"></div><div class="cp-corner tr"></div>
+            <div class="cp-corner bl"></div><div class="cp-corner br"></div>
+            <div class="cp-badge" id="p2-badge-c"></div>
+            <div class="cp-stars">✦ ✦ ✦</div>
+            <div class="cp-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p2-day-c"></em></div>
+            <div class="cp-divider"></div>
+            <div class="cp-offer"><strong id="p2-offer-c"></strong></div>
+            <div class="cp-time" id="p2-time-c"></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-kicker" id="p2-kicker">Objava 2</div>
+          <div class="card-title" id="p2-title" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Čistoća koja se oseća</div>
+          <div class="card-text" id="p2-cap">Svaki litar prolazi kroz precizan proces kako bi se postigao besprekoran premium kvalitet.</div>
+          <div class="card-tags" id="p2-tags">#rakija #destilacija #kolarević #premiumrakija #zanatskoproizvodnja</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card">
+        <div class="card-img" style="position:relative;">
+          <img id="card-img-3" src="uploads/pomelli-image-22_20260315_162343.webp" alt="" style="filter:brightness(0.82) saturate(1.25) contrast(1.08);" data-upload-path="uploads/pomelli-image-22_20260315_162343.webp">
+          <div class="card-coffee-ov" id="card-std-ov-3"><div class="cc-label" id="p3-label-c">Dobrodošlica</div></div>
+          <div class="card-promo" id="card-promo-3" style="display:none;">
+            <div class="cp-corner tl"></div><div class="cp-corner tr"></div>
+            <div class="cp-corner bl"></div><div class="cp-corner br"></div>
+            <div class="cp-badge" id="p3-badge-c"></div>
+            <div class="cp-stars">✦ ✦ ✦</div>
+            <div class="cp-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p3-day-c"></em></div>
+            <div class="cp-divider"></div>
+            <div class="cp-offer"><strong id="p3-offer-c"></strong></div>
+            <div class="cp-time" id="p3-time-c"></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-kicker" id="p3-kicker">Objava 3</div>
+          <div class="card-title" id="p3-title" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Svako dobro društvo počinje ovako</div>
+          <div class="card-text" id="p3-cap">Točimo s ponosom. Kolarević rakija — za pravi doček i pravi razgovor.</div>
+          <div class="card-tags" id="p3-tags">#rakija #gostoprimstvo #srbija #kolarević #točimo</div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card">
+        <div class="card-img" style="position:relative;">
+          <img id="card-img-4" src="uploads/pomelli-image-19_20260315_163101.webp" alt="" style="filter: brightness(93%) saturate(111%) contrast(107%) sepia(0%);" data-upload-path="uploads/pomelli-image-19_20260315_163101.webp">
+          <div class="card-morning-ov">
+            <div class="cm-text" id="p4-quote-c" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Voćni karakter</div>
+            <div class="cm-tag" id="cm-handle">@kaludjerka_rakija</div>
+          </div>
+        
+          <div class="card-promo" id="card-promo-4" style="display:none;">
+            <div class="cp-corner tl"></div><div class="cp-corner tr"></div>
+            <div class="cp-corner bl"></div><div class="cp-corner br"></div>
+            <div class="cp-badge" id="p4-badge-c"></div>
+            <div class="cp-stars">✦ ✦ ✦</div>
+            <div class="cp-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p4-day-c"></em></div>
+            <div class="cp-divider"></div>
+            <div class="cp-offer"><strong id="p4-offer-c"></strong></div>
+            <div class="cp-time" id="p4-time-c"></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-kicker" id="p4-kicker">Objava 4</div>
+          <div class="card-title" id="p4-title" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Kruška. Ništa više, ništa manje.</div>
+          <div class="card-text" id="p4-cap">Voćni karakter bez kompromisa. Kolarević kruška rakija — direktno iz prirode.</div>
+          <div class="card-tags" id="p4-tags">#kruška #rakija #kolarević #voćnarakija #autentično</div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card">
+        <div class="card-img" style="position:relative;">
+          <img id="card-img-5" src="uploads/pomelli-image-24_20260315_163152.webp" alt="" style="filter: brightness(93%) saturate(111%) contrast(107%) sepia(0%);" data-upload-path="uploads/pomelli-image-24_20260315_163152.webp">
+          <div class="card-coffee-ov"><div class="cc-label" id="p5-label-c"></div></div>
+        
+          <div class="card-promo" id="card-promo-5" style="display:none;">
+            <div class="cp-corner tl"></div><div class="cp-corner tr"></div>
+            <div class="cp-corner bl"></div><div class="cp-corner br"></div>
+            <div class="cp-badge" id="p5-badge-c"></div>
+            <div class="cp-stars">✦ ✦ ✦</div>
+            <div class="cp-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p5-day-c"></em></div>
+            <div class="cp-divider"></div>
+            <div class="cp-offer"><strong id="p5-offer-c"></strong></div>
+            <div class="cp-time" id="p5-time-c"></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-kicker" id="p5-kicker">Objava 5</div>
+          <div class="card-title" id="p5-title" style="font-family: &quot;Cormorant Garamond&quot;, serif;"></div>
+          <div class="card-text" id="p5-cap"></div>
+          <div class="card-tags" id="p5-tags"></div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="card">
+        <div class="card-img" style="position:relative;">
+          <img id="card-img-6" src="uploads/odabir_plemenitog_vo-a_version_1_square_20260315_163040.webp" alt="" data-upload-path="uploads/odabir_plemenitog_vo-a_version_1_square_20260315_163040.webp" style="display: block;">
+        
+          <div class="card-promo" id="card-promo-6" style="display:none;">
+            <div class="cp-corner tl"></div><div class="cp-corner tr"></div>
+            <div class="cp-corner bl"></div><div class="cp-corner br"></div>
+            <div class="cp-badge" id="p6-badge-c"></div>
+            <div class="cp-stars">✦ ✦ ✦</div>
+            <div class="cp-day" style="font-family: &quot;Cormorant Garamond&quot;, serif;"><em id="p6-day-c"></em></div>
+            <div class="cp-divider"></div>
+            <div class="cp-offer"><strong id="p6-offer-c"></strong></div>
+            <div class="cp-time" id="p6-time-c"></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-kicker" id="p6-kicker">Objava 6</div>
+          <div class="card-title" id="p6-title" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Za vaskršnju trpezu</div>
+          <div class="card-text" id="p6-cap">Svaki praznik zaslužuje pravu rakiju. Kolarević — za momente koji se pamte.</div>
+          <div class="card-tags" id="p6-tags">#vaskrs #uskrs #rakija #kolarević #vaskršnjaTrpeza #prazniciSaSrcem<br></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STRATEGY -->
+  <div class="strat-sec">
+    <div class="sec-kicker" id="sec3-kicker">Plan</div>
+    <div class="sec-title" id="sec3-title" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Šta i zašto <em>objavljujemo</em></div>
+    <div class="sec-desc" id="sec3-desc" style="margin-bottom:16px;">Svaka objava spada u jednu od tri kategorije. To drži feed uravnoteženim i svrhovitim.</div>
+    <div class="pillars">
+      <div class="pillar"><span class="pillar-icon" id="pillar-icon-1"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"></path></svg></span><div class="pillar-title" id="pillar-title-1" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Priča o brendu</div><div class="pillar-text" id="pillar-text-1">Predstavljamo Kolarević kao premium zanatsku rakiju — ko smo, odakle dolazimo, zašto nam je stalo do kvaliteta.</div></div>
+      <div class="pillar"><span class="pillar-icon" id="pillar-icon-2"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span><div class="pillar-title" id="pillar-title-2" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Život uz rakiju</div><div class="pillar-text" id="pillar-text-2">Objave koje prikazuju rakiju u svakodnevnim momentima — trpeza, društvo, letnji dan. Izgradnja emocionalne veze s pratiocem.</div></div>
+      <div class="pillar"><span class="pillar-icon" id="pillar-icon-3"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span><div class="pillar-title" id="pillar-title-3" style="font-family: &quot;Cormorant Garamond&quot;, serif;"> Kvalitet koji se vidi</div><div class="pillar-text" id="pillar-text-3">Destilacija, voće, proces — edukativni sadržaj koji opravdava premium cenu i gradi poverenje pre kupovine.</div></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="ftr">
+    <div class="ftr-logo"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt=""></div>
+    <div class="ftr-name" id="ftr-brand-name" style="font-family: &quot;Cormorant Garamond&quot;, serif;">Kaluđerka Rakija</div>
+    <div class="ftr-sub" id="ftr-brand-sub">@kaludjerka_rakija</div>
+  </div>
+
+</div>
+
+
+
+
+
+<!-- JSZip for Publish bundle -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+
+
+
+<div id="give-freely-root-kkkbiiikppgjdiebcabomlbidfodipjg" class="give-freely-root" data-extension-id="kkkbiiikppgjdiebcabomlbidfodipjg" data-extension-name="Substital: Add subtitles to videos and movies" style="display: block;"></div><deepl-input-controller translate="no"></deepl-input-controller><span id="PING_IFRAME_FORM_DETECTION" style="display: none;"></span><div style="position: relative;" id="zp-13-0-5-licdn-root-apollo_everywhere"><div class="zp apolloio-css-vars-reset x_lAIzV x_ktWFc" dir="ltr" data-has-tooltip-listener=""><div class="x_BJJxg" data-disable-focus-trap="true"></div><div class="x_KfhZL" aria-live="polite" aria-atomic="true" data-disable-focus-trap="true" data-testid="toast-container-top"></div><span data-name="tooltip-listener" aria-hidden="true" style="display: none;"></span></div> </div></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
